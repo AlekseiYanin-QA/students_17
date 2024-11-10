@@ -5,20 +5,26 @@ public class Main {
 
         ResultsBoard rb = new ResultsBoard();
 
-        rb.addStudent("Алексей", 90.0f);
-        rb.addStudent("Мария", 85.0f);
-        rb.addStudent("Сергей", 92.0f);
-        rb.addStudent("Дмитрий", 90.0f);
-        rb.addStudent("Елена", 88.0f);
-        rb.addStudent("Иван", 90.0f);
-        rb.addStudent("Андрей", 75.0f);
-        rb.addStudent("Виктор", 98.0f);
+        rb.addStudent("Ivan", 3.0f);
+        rb.addStudent("Maria", 4.0f);
+        System.out.println(rb.top3()); // -> [Maria, Ivan]
+        rb.addStudent("Vlad", 5.0f);
+        System.out.println(rb.top3()); // -> [Vlad, Maria, Ivan]
+        rb.addStudent("Anton", 4.5f);
+        System.out.println(rb.top3()); // -> [Vlad, Anton, Maria]
+        rb.addStudent("Daria", 1.5f);
+        System.out.println(rb.top3()); // -> [Vlad, Anton, Maria]
+        rb.addStudent("Vasiliy", 5.0f);
+        System.out.println(rb.top3()); // -> [Vlad, Vasiliy, Anton] или [Vasiliy, Vlad, Anton]
+
+        rb.addStudent("Vlad", 3.5f); // Обновление Vlad с новым баллом
+        System.out.println(rb.top3()); // ->  [Vasiliy, Anton, Maria]
 
         List<String> topStudents = rb.top3();
 
-        System.out.println("Топ 3 студента:");
+        System.out.println("\nТоп 3 студента:");
         for (String student : topStudents) {
-            System.out.println(student);
+            System.out.println(student); // ->  [Vasiliy, Anton, Maria]
         }
     }
 }
