@@ -1,44 +1,44 @@
 import java.util.*;
 
 public class ResultsBoard {
-    // TreeMap хранит записи с именами студентов и их средними баллами
-    private final TreeMap<Float, Set<String>> scoresMap;
+    private final TreeMap<Float, TreeSet<Student>> scoresMap;
 
     public ResultsBoard() {
         scoresMap = new TreeMap<>();
     }
 
-    // Метод для добавления студента
     public void addStudent(String name, Float score) {
-        if (scoresMap.containsKey(score)) {
-            scoresMap.get(score).remove(name);
-            if (scoresMap.get(score).isEmpty()) {
-                scoresMap.remove(score);
-            }
-        }
+        Student student = new Student(name, score);
 
-        // Добавляем новую запись
-        scoresMap.putIfAbsent(score, new HashSet<>());
-        scoresMap.get(score).add(name);
+        // Удаляем существующие записи, если есть
+        scoresMap.values().forEach(set -> set.remove(student));
+
+        // Добавляем запись
+        scoresMap.putIfAbsent(score, new TreeSet<>());
+        scoresMap.get(score).add(student);
     }
 
-    // Метод для получения 3-х лучших студентов
     public List<String> top3() {
         List<String> topStudents = new ArrayList<>();
 
-        // Используем метод descendingKeySet() для получения в порядке убывания
-        for (Float score : scoresMap.descendingKeySet()) {
-            // Получаем имена студентов с текущим баллом
-            for (String name : scoresMap.get(score)) {
-                topStudents.add(name);
-                // Если нашли 3 студента, выходим
-                if (topStudents.size() == 3) {
-                    return topStudents;
+        // Получаем записи с наивысшим баллом
+        for (int i = 0; i < 3; i++) {
+            Map.Entry<Float, TreeSet<Student>> entry = scoresMap.pollLastEntry(); // Получаем запись с наивысшим баллом
+            if (entry != null) {
+                TreeSet<Student> students = entry.getValue();
+                Student student = students.pollLast(); // Получаем студента с высшим баллом
+                if (student != null) {
+                    topStudents.add(student.name());
                 }
+                // Если в наборе студентов больше нет студентов, удаляем запись
+                if (students.isEmpty()) {
+                    scoresMap.remove(entry.getKey());
+                }
+            } else {
+                break; // Если нет студентов, выходим
             }
         }
 
         return topStudents; // Возвращаем список студентов
     }
 }
-
